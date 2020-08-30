@@ -58,6 +58,11 @@ body {
   margin: 5px 0 0 5px;
 }
 
+.navigation{
+  position: absolute;
+  margin: 40px 0 0 5px;
+}
+
 .toggle:hover {
   cursor: pointer;
   color: rgb(206, 197, 197);

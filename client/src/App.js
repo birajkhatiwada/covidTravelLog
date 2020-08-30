@@ -3,16 +3,10 @@ import "mapbox-gl/dist/mapbox-gl.css"
 import DeckGL, { GeoJsonLayer } from "deck.gl";
 import Geocoder from "react-map-gl-geocoder";
 import React, {useState, useEffect} from 'react';
-import ReactMapGL, {Marker, Popup, GeolocateControl} from 'react-map-gl';
+import ReactMapGL, {Marker, Popup, GeolocateControl, NavigationControl} from 'react-map-gl';
 import {listLogEntries, listCovidEntries} from './API';
 import LogEntryForm from './LogEntryForm'
 
-
-const geolocateStyle = {
-  float: 'left',
-  margin: '50px',
-  padding: '10px'
-};
 
 
 const App = () =>{
@@ -49,7 +43,6 @@ const App = () =>{
   }
 
 
-
   useEffect(()=>{
     getEntries();
     getCovidEntries();
@@ -63,6 +56,7 @@ const App = () =>{
       latitude
     })
   }
+
 
   const handleOnResult = (event) => {
    setSearchResultLayer(new GeoJsonLayer({
@@ -156,13 +150,7 @@ const App = () =>{
             // offsetLeft={-12}
             // offsetTop={-24}
             >
-          <div
-
-            // onClick={() => setShowCovidPopup({
-            //   // ...showPopup,
-            //   [index]: true,
-            // })}
-              >
+          <div>
               <svg
                   onMouseOver={()=> setShowCovidPopup({
                     [index]: true,
@@ -208,9 +196,6 @@ const App = () =>{
       </React.Fragment>
       ))
     }
-
-
-
 
     {
       addEntryLocation?(
@@ -260,17 +245,17 @@ const App = () =>{
 
     <GeolocateControl
       className = "geoControl"
-      // style = {geolocateStyle}
       positionOptions = {{enableHighAccuracy: true}}
       trackUserLocation = {true}
+
     />
+    <NavigationControl className="navigation" showZoom={true} showCompass={true}/>
     <Geocoder
                 className = "geocoder"
                 mapRef={mapRef}
                 onResult={handleOnResult}
                 onViewportChange={setViewport}
                 mapboxApiAccessToken={process.env.REACT_APP_MAPBOX}
-                // mapboxApiAccessToken={"mapbox://styles/birajkhatiwada/ckd6zcsfn0g031ise8iy1qhm6"}
                 position='top-right'
               />
 
@@ -283,14 +268,6 @@ const App = () =>{
     {/* <DeckGL {...viewport} layers={[searchResultLayer]} /> */}
 
     </div>
-    {/* <br/> */}
-    {/* <nav>
-    <div className="btns">
-      <button className="toggle" onClick={()=> setMapStyle("mapbox://styles/birajkhatiwada/ckd6zcsfn0g031ise8iy1qhm6")}>Basic Map</button>
-      <button className="toggle" onClick={()=>setMapStyle("mapbox://styles/birajkhatiwada/ckd6zh2zu0g251ikokpwdhpee")}>Satellite Map</button>
-      <button className="toggle" onClick={()=>setMapStyle("mapbox://styles/birajkhatiwada/ckd9v0k840kwa1imo7uy2yui7")}>Outdoor Map</button>
-    </div>
-    </nav> */}
     </>
   );
 }
