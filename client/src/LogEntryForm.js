@@ -14,17 +14,16 @@ const LogEntryForm = ({location, onClose}) => {
 
     const onSubmit = async(data)=>{
         try {
-            console.log('inside onSubmti');
             console.log(data);
             setLoading(true);
             data.latitude = location.latitude;
             data.longitude = location.longitude;
-            console.log('after lat');
             console.log(data);
             if(btnClicked && !visited){
                 data.toVisit = "Visit: in the future";
             }
             const created = await createLogEntry(data);
+            console.log("created");
             console.log(created);
             onClose();
         } catch (error) {
@@ -47,7 +46,6 @@ const LogEntryForm = ({location, onClose}) => {
     }
 
     return(
-
         <div>
             <div className="checkBtn" style={{
                 display: btnClicked? 'none': 'block',

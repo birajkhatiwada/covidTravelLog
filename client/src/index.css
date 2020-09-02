@@ -79,7 +79,7 @@ body {
 }
 
 .Popup{
-  background-color: #f8c102;
+  /* background-color: #f8c102; */
   position: absolute;
   top: 6;
   bottom: 9;
@@ -92,6 +92,12 @@ body {
   margin: 0 auto;
   display: block;
 }
+
+/* .popup{
+  background-color: rgb(37, 179, 134);
+  width: 30vw;
+  padding: 1rem;
+} */
 
 .marker.red path{
   fill: #f05305;
@@ -108,13 +114,6 @@ body {
 .covid {
 
   fill: #d11a1aa9;
-}
-
-
-.popup{
-  background-color: rgb(37, 179, 134);
-  width: 30vw;
-  padding: 1rem;
 }
 
 .head{
@@ -134,7 +133,7 @@ body {
 
 .checkBtn {
   display: flex;
-  width: 60rem;
+  width: fit-content;
   /* background: blue; */
   text-align: left;
 }

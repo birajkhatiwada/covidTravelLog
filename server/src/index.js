@@ -9,8 +9,6 @@ require('dotenv').config();
 const middlewares = require('./middlewares')
 const logs = require('./api/logs')
 
-
-
 mongoose.connect('mongodb://localhost/travel-log', {
     useNewUrlParser: true,
     useUnifiedTopology: true

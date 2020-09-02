@@ -6,6 +6,7 @@ import React, {useState, useEffect} from 'react';
 import ReactMapGL, {Marker, Popup, GeolocateControl, NavigationControl} from 'react-map-gl';
 import {listLogEntries, listCovidEntries} from './API';
 import LogEntryForm from './LogEntryForm'
+import { deleteLogEntry} from './API';
 
 
 
@@ -32,16 +33,15 @@ const App = () =>{
 
   const getEntries = async()=>{
     const logEntries = await listLogEntries();
+    console.log(logEntries);
     setLogEntries(logEntries);
   }
 
   const getCovidEntries = async()=>{
     const covidentries = await listCovidEntries();
-    console.log('hi');
     console.log(covidentries);
     setCovidEntries(covidentries);
   }
-
 
   useEffect(()=>{
     getEntries();
@@ -57,7 +57,6 @@ const App = () =>{
     })
   }
 
-
   const handleOnResult = (event) => {
    setSearchResultLayer(new GeoJsonLayer({
       id: "search-result",
@@ -67,6 +66,15 @@ const App = () =>{
       pointRadiusMinPixels: 10,
       pointRadiusMaxPixels: 10
    }))
+  }
+
+  const handleDeleteEntry = async (event) => {
+    console.log("here");
+    console.log(event._id);
+    await deleteLogEntry(event);
+    // const logEntries = await listLogEntries();
+    setMouseEntered(!mouseEntered);
+    getEntries();
   }
 
   return (
@@ -86,6 +94,7 @@ const App = () =>{
           <Marker
             latitude={entry.latitude}
             longitude={entry.longitude}
+            draggable = {true}
             // offsetLeft={-12}
             // offsetTop={-24}
             >
@@ -94,16 +103,16 @@ const App = () =>{
                 onMouseOver={()=> setShowPopup({
                   [entry._id]: true,
                 })}
-                onMouseOut={()=>setShowPopup({
-                  [entry._id]: false,
-                })}
+                // onMouseOut={()=>setShowPopup({
+                //   [entry._id]: false,
+                // })}
 
                 className="marker"
                 style={{
                   height: `${9 * viewport.zoom}px`,
                   width: `${9 * viewport.zoom}px`,
                 }}
-                id="Layer_1" enable-background="new 0 0 508.492 508.492" height="512" viewBox="0 0 508.492 508.492" width="512">
+                id="Layer_1" enableBackground="new 0 0 508.492 508.492" height="512" viewBox="0 0 508.492 508.492" width="512">
                 <path className={entry.toVisit? "red": "green"} d="m439.493 67.599-179.821-66.603c-3.586-1.328-7.529-1.328-11.115 0l-179.822 66.603c-6.276 2.324-10.442 8.311-10.442 15.004v151.724c0 64.755 27.348 126.736 75.031 170.053l110.031 99.956c6.101 5.543 15.416 5.543 21.518 0l110.031-99.956c47.684-43.316 75.031-105.298 75.031-170.053v-151.724c.001-6.694-4.165-12.68-10.442-15.004z" fill="#91c656"/>
                 <path className={entry.toVisit? "red": "green"} d="m173.443 324.109c113.969-61.268 211.107-35.781 262.998-12.144 8.824-24.664 13.494-50.914 13.494-77.64v-151.722c0-6.693-4.166-12.68-10.442-15.004l-179.821-66.603c-3.586-1.328-7.529-1.328-11.115 0l-179.822 66.603c-6.276 2.324-10.442 8.311-10.442 15.004v151.724c0 41.246 11.111 81.358 31.49 116.247 22.609-.747 50.142-8.446 83.66-26.465z" fill="#aced70"/>
                 <path className={entry.toVisit? "red": "green"} d="m205.87 135.888c-55.86-53.46-108.455-54.534-147.577-41.723v140.162c0 41.246 11.111 81.358 31.49 116.247 22.61-.746 50.142-8.444 83.661-26.463 113.969-61.268 211.107-35.781 262.998-12.144 16.799-46.956 13.494-76.637 13.494-160.189-73.07 28.264-176.78 48.502-244.066-15.89z" fill="#9bd65e"/>
@@ -123,7 +132,7 @@ const App = () =>{
               dynamicPosition={true}
               onClose={() => setShowPopup({})}
               anchor="top"
-               >
+              >
               <div className='popup'>
                 <h3>{entry.title}</h3>
                 {/* <p>{entry.comments}</p> */}
@@ -133,6 +142,7 @@ const App = () =>{
                 {entry.visitDate ? <small>Visited on: {new Date(entry.visitDate).toLocaleDateString()}</small>: null}
                 {entry.toVisit ? <p>{entry.toVisit}</p>: null}
                 {entry.image && <img src={entry.image} alt={entry.title}></img>}
+                <button onClick={()=>handleDeleteEntry(entry)}>Delete Entry</button>
               </div>
               </Popup>
           ) : null
@@ -141,7 +151,7 @@ const App = () =>{
       ))
     }
 
-{
+    {
       covidEntries.map((entry, index)=>(
         <React.Fragment key={index}>
           <Marker
@@ -163,7 +173,7 @@ const App = () =>{
                    height: `${9 * viewport.zoom}px`,
                    width: `${9 * viewport.zoom}px`,
                  }}
-                id="Capa_1" enable-background="new 0 0 511 511" height="512" viewBox="0 0 511 511" width="512">
+                id="Capa_1" enableBackground="new 0 0 511 511" height="512" viewBox="0 0 511 511" width="512">
                 <g><circle className="circle" cx="255.5" cy="225" r="136"/>
                 <path d="m415.306 66.193c-42.685-42.685-99.439-66.193-159.806-66.193s-117.121 23.508-159.806 66.193c-42.686 42.687-66.194 99.44-66.194 159.807 0 106.499 74.454 198.443 177.887 220.849l48.113 64.151 48.114-64.152c103.432-22.406 177.886-114.349 177.886-220.848 0-60.367-23.508-117.12-66.194-159.807zm-159.806-7.193c91.533 0 166 74.468 166 166s-74.467 166-166 166-166-74.468-166-166 74.467-166 166-166z"/>
                 </g>
@@ -251,12 +261,12 @@ const App = () =>{
     />
     <NavigationControl className="navigation" showZoom={true} showCompass={true}/>
     <Geocoder
-                className = "geocoder"
-                mapRef={mapRef}
-                onResult={handleOnResult}
-                onViewportChange={setViewport}
-                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX}
-                position='top-right'
+      className = "geocoder"
+      mapRef={mapRef}
+      onResult={handleOnResult}
+      onViewportChange={setViewport}
+      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX}
+      position='top-right'
               />
 
     <div className="toggle-btns">

@@ -26,10 +26,32 @@ export async function listCovidEntries(){
 
 
 export async function createLogEntry(entry){
+    // const Entry = {
+    //     entry: entry,
+    //     type: "delete",
+    // }
+    entry.type = "create";
+    const response = await fetch(`${API_URL}/api/logs/`,{
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(entry),
+    });
+    return response.json();
+}
+
+
+
+export async function deleteLogEntry(entry){
+    entry.type = "delete";
+    console.log(entry._id);
     const response = await fetch(`${API_URL}/api/logs`,{
         method: 'POST',
         headers: {
             'content-type': 'application/json',
+            'Accept': 'application/json'
         },
         body: JSON.stringify(entry),
     });
